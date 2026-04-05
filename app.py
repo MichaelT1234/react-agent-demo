@@ -11,7 +11,6 @@ load_dotenv()
 app = Flask(__name__)
 
 # Initialize Global Components
-# We initialize these globally so they persist across requests (for this simple demo)
 try:
     df = pd.read_csv("ecommerce_customer_churn_dataset.csv")
     csv_loaded = True
@@ -29,9 +28,6 @@ def get_agent():
         print("Warning: OPENAI_API_KEY not found in environment variables.")
         return None
     
-    # Using gpt-4 or gpt-3.5-turbo as standard models. 
-    # 'gpt-4.1' in original code was likely a typo or internal/future alias.
-    # Using 'gpt-4o' for best performance/speed balance if available, otherwise 'gpt-4'.
     llm = ChatOpenAI(temperature=0, model="gpt-4.1", api_key=api_key) 
     
     return create_pandas_dataframe_agent(
@@ -96,11 +92,6 @@ def get_data():
     try:
         # Load only first 100 rows for performance
         subset = df.head(100)
-        
-        # Serialization:
-        # Pandas to_json() correctly handles NaN by converting them to null (valid JSON).
-        # We parse it back to a python list/dict using json.loads so Flask's jsonify can re-serialize it 
-        # (or we could just return the string, but jsonify ensures headers etc).
         json_str = subset.to_json(orient='records')
         data_records = json.loads(json_str)
         
