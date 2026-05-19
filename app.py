@@ -8,6 +8,13 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
+# Optional LangSmith Tracking
+if os.getenv("LANGCHAIN_API_KEY"):
+    os.environ["LANGCHAIN_TRACING_V2"] = "true"
+    os.environ.setdefault("LANGCHAIN_PROJECT", "react-agent-demo")
+else:
+    os.environ["LANGCHAIN_TRACING_V2"] = "false"
+
 app = Flask(__name__)
 
 # Initialize Global Components
